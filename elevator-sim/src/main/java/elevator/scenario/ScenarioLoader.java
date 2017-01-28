@@ -1,6 +1,8 @@
 package elevator.scenario;
 
 import com.google.common.collect.ImmutableList;
+import elevator.sim.scenario.MoveCommand;
+import elevator.sim.scenario.Scenario;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -41,7 +43,7 @@ public class ScenarioLoader
         final int colonIndex = line.indexOf(':');
         final int originalFloor = Integer.valueOf(line.substring(0, colonIndex));
 
-        final ImmutableList.Builder<MoveCommmand> travelRequestsBuilder = ImmutableList.builder();
+        final ImmutableList.Builder<MoveCommand> travelRequestsBuilder = ImmutableList.builder();
         final Matcher matcher = Pattern.compile("(\\d+)\\-(\\d)").matcher(line);
 
         if (!matcher.find())
@@ -49,12 +51,12 @@ public class ScenarioLoader
             return new Scenario(originalFloor, travelRequestsBuilder.build());
         }
 
-        travelRequestsBuilder.add(new MoveCommmand(originalFloor, Integer.valueOf(matcher.group(1))));
-        travelRequestsBuilder.add(new MoveCommmand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));
+        travelRequestsBuilder.add(new MoveCommand(originalFloor, Integer.valueOf(matcher.group(1))));
+        travelRequestsBuilder.add(new MoveCommand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));
 
         while (matcher.find())
         {
-            travelRequestsBuilder.add(new MoveCommmand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));
+            travelRequestsBuilder.add(new MoveCommand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));
         }
 
         return new Scenario(originalFloor, travelRequestsBuilder.build());

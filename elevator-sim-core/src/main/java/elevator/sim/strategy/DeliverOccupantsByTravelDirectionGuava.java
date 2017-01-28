@@ -3,8 +3,8 @@ package elevator.sim.strategy;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
-import elevator.sim.Occupant;
 import elevator.sim.TravelDirection;
+import elevator.sim.scenario.MoveCommand;
 
 import java.util.List;
 
@@ -14,30 +14,32 @@ import java.util.List;
 public final class DeliverOccupantsByTravelDirectionGuava implements OccupantDeliveryStrategy
 {
     @Override
-    public List<Integer> getFloorSequence(final int originalFloor, final List<Occupant> waitingOccupants)
+    public List<Integer> getMoveSequence(final ImmutableList<MoveCommand> moveCommands)
     {
-        if (waitingOccupants.isEmpty())
+        if (moveCommands.isEmpty())
         {
             return ImmutableList.of();
         }
 
         TravelDirection previousDirection = null;
         TravelDirection currentDirection = null;
-        int pivotFloor = originalFloor;
+        int pivotFloor = 0;
 
-        final ImmutableList.Builder floorSequenceBuilder = ImmutableList.builder().add(originalFloor);
+        final ImmutableList.Builder floorSequenceBuilder = ImmutableList.builder();
         ImmutableSortedSet.Builder directionalTripBuilder = null;
 
-        for (final Occupant occupant : waitingOccupants)
+        for (final MoveCommand moveCommand : moveCommands)
         {
-            final int pickUpFloor = occupant.getOriginatingFloor();
-            final int dropOffFloor = occupant.getDestinationFloor();
-
-            Preconditions.checkState(pickUpFloor != dropOffFloor,
-                    "Cannot have an occupant with the same pick-up and drop-off floor (given [" + pickUpFloor + "] at index [" + waitingOccupants.indexOf(occupant) + "].");
+            final int originatingFloor = moveCommand.getOriginatingFloor();
+            final int destinationFloor = moveCommand.getDestinationFloor();
+//            final int originatingFloor = moveCommand.get;
+//            final int destinationFloor = occupant.getDestinationFloor();
+//
+            Preconditions.checkState(originatingFloor != destinationFloor,
+                    "Cannot have an scenario with the same pick-up and drop-off floor (given [" + originatingFloor + "] at index [" + moveCommands.indexOf(moveCommand) + "].");
 
             previousDirection = currentDirection;
-            currentDirection = pickUpFloor < dropOffFloor ? TravelDirection.UP : TravelDirection.DOWN;
+            currentDirection = originatingFloor < destinationFloor ? TravelDirection.UP : TravelDirection.DOWN;
 
             if (!currentDirection.equals(previousDirection))
             {
@@ -50,11 +52,11 @@ public final class DeliverOccupantsByTravelDirectionGuava implements OccupantDel
                 directionalTripBuilder = TravelDirection.UP.equals(currentDirection) ? ImmutableSortedSet.naturalOrder() : ImmutableSortedSet.reverseOrder();
             }
 
-            if (pivotFloor != pickUpFloor)
+            if (pivotFloor != originatingFloor)
             {
-                directionalTripBuilder.add(pickUpFloor);
+                directionalTripBuilder.add(originatingFloor);
             }
-            directionalTripBuilder.add(dropOffFloor);
+            directionalTripBuilder.add(destinationFloor);
         }
 
         return floorSequenceBuilder.addAll(directionalTripBuilder.build()).build();

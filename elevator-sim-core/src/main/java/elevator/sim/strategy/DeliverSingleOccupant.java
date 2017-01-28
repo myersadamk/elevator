@@ -1,6 +1,7 @@
 package elevator.sim.strategy;
 
-import elevator.sim.Occupant;
+import com.google.common.collect.ImmutableList;
+import elevator.sim.scenario.MoveCommand;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class DeliverSingleOccupant implements OccupantDeliveryStrategy
 {
 
     @Override
-    public List<Integer> getFloorSequence(final int currentFloor, final List<Occupant> waitingOccupants)
+    public List<Integer> getMoveSequence(final ImmutableList<MoveCommand> moveCommands)
     {
         return null;
     }

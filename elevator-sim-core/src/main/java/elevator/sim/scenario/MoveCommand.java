@@ -1,14 +1,14 @@
-package elevator.scenario;
+package elevator.sim.scenario;
 
 /**
  * Created by Adam on 1/27/2017.
  */
-public class MoveCommmand
+public class MoveCommand
 {
     private final Integer originatingFloor;
     private final Integer destinationFloor;
 
-    public MoveCommmand(final Integer originatingFloor, final Integer destinationFloor)
+    public MoveCommand(final Integer originatingFloor, final Integer destinationFloor)
     {
         this.originatingFloor = originatingFloor;
         this.destinationFloor = destinationFloor;
@@ -33,7 +33,7 @@ public class MoveCommmand
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        final MoveCommmand that = (MoveCommmand) o;
+        final MoveCommand that = (MoveCommand) o;
 
         if (!originatingFloor.equals(that.originatingFloor)) return false;
         return destinationFloor.equals(that.destinationFloor);
@@ -56,7 +56,7 @@ public class MoveCommmand
     @Override
     public String toString()
     {
-        return "MoveCommmand{" +
+        return "MoveCommand{" +
                 "originatingFloor=" + originatingFloor +
                 ", destinationFloor=" + destinationFloor +
                 '}';

@@ -13,20 +13,20 @@
 //public final class DeliverOccupantsByTravelDirection implements OccupantDeliveryStrategy
 //{
 //    @Override
-//    public List<Integer> getFloorSequence(final int currentFloor, final List<Occupant> waitingOccupants)
+//    public List<Integer> getMoveSequence(final int currentFloor, final List<Occupant> waitingOccupants)
 //    {
 //        final List<Integer> visitationOrder = Lists.newArrayListWithCapacity(waitingOccupants.size() * 2);
 //        TravelDirection currentDirection = TravelDirection.IDLE;
 //        TravelDirection previousDirection = null;
 //        int lastDirectionChangeIndex = 0;
 //
-//        for (final Occupant occupant : waitingOccupants)
+//        for (final Occupant scenario : waitingOccupants)
 //        {
-//            final int originatingFloor = occupant.getOriginatingFloor();
-//            final int destinationFloor = occupant.getDestinationFloor();
+//            final int originatingFloor = scenario.getOriginatingFloor();
+//            final int destinationFloor = scenario.getDestinationFloor();
 //
 //            Preconditions.checkState(originatingFloor != destinationFloor,
-//                    "Cannot have an occupant with the same pick-up and drop-off floor (given [" + originatingFloor + "] at index [" + waitingOccupants.indexOf(occupant) + "].");
+//                    "Cannot have an scenario with the same pick-up and drop-off floor (given [" + originatingFloor + "] at index [" + waitingOccupants.indexOf(scenario) + "].");
 //
 //            previousDirection = currentDirection;
 //            currentDirection = originatingFloor < destinationFloor ? TravelDirection.UP : TravelDirection.DOWN;

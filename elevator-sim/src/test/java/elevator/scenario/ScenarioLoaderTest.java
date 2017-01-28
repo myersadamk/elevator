@@ -1,6 +1,8 @@
 package elevator.scenario;
 
 import com.google.common.collect.ImmutableList;
+import elevator.sim.scenario.MoveCommand;
+import elevator.sim.scenario.Scenario;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -20,8 +22,8 @@ public class ScenarioLoaderTest
         assertThat(scenarios, Matchers.contains(
                 new Scenario(10,
                         ImmutableList.of(
-                                new MoveCommmand(10, 8),
-                                new MoveCommmand(8, 1))
+                                new MoveCommand(10, 8),
+                                new MoveCommand(8, 1))
                 )
         ));
     }
@@ -34,15 +36,15 @@ public class ScenarioLoaderTest
         assertThat(scenarios, Matchers.contains(
                 new Scenario(10,
                         ImmutableList.of(
-                                new MoveCommmand(10, 8),
-                                new MoveCommmand(8, 1))
+                                new MoveCommand(10, 8),
+                                new MoveCommand(8, 1))
                 ),
                 new Scenario(9,
                         ImmutableList.of(
-                                new MoveCommmand(9, 1),
-                                new MoveCommmand(1, 5),
-                                new MoveCommmand(1, 6),
-                                new MoveCommmand(1, 5))
+                                new MoveCommand(9, 1),
+                                new MoveCommand(1, 5),
+                                new MoveCommand(1, 6),
+                                new MoveCommand(1, 5))
                 )
         ));
     }
