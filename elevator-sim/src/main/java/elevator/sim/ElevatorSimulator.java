@@ -1,8 +1,6 @@
 package elevator.sim;
 
 import com.google.inject.AbstractModule;
-import elevator.sim.strategy.DeliverOccupantsByTravelDirection;
-import elevator.sim.strategy.OccupantDeliveryStrategy;
 
 public final class ElevatorSimulator
 {
@@ -13,10 +11,10 @@ public final class ElevatorSimulator
             @Override
             protected void configure()
             {
-                bind(OccupantDeliveryStrategy.class).to(DeliverOccupantsByTravelDirection.class);
+//                bind(OccupantDeliveryStrategy.class).to(DeliverOccupantsByTravelDirection.class);
             }
         };
-//        final Elevator elevator = new Elevator(new DeliverSingleOccupant());
+        final Elevator elevator = new Elevator();
 //        try (final FileReader fileReader = new FileReader(args[0])) {
 //
 //            final List<Occupant> occupants = Lists.newArrayList();
