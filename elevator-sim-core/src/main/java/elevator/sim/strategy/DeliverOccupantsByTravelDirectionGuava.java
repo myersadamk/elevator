@@ -16,6 +16,11 @@ public final class DeliverOccupantsByTravelDirectionGuava implements OccupantDel
     @Override
     public List<Integer> getFloorSequence(final int currentFloor, final List<Occupant> waitingOccupants)
     {
+        if (waitingOccupants.isEmpty())
+        {
+            return ImmutableList.of();
+        }
+
         TravelDirection currentDirection = TravelDirection.IDLE;
         TravelDirection previousDirection = null;
 
@@ -31,14 +36,7 @@ public final class DeliverOccupantsByTravelDirectionGuava implements OccupantDel
                     "Cannot have an occupant with the same pick-up and drop-off floor (given [" + pickUpFloor + "] at index [" + waitingOccupants.indexOf(occupant) + "].");
 
             previousDirection = currentDirection;
-            if (TravelDirection.IDLE.equals(currentDirection))
-            {
-                currentDirection = currentFloor < pickUpFloor ? TravelDirection.UP : TravelDirection.DOWN;
-            }
-            else
-            {
-                currentDirection = pickUpFloor < dropOffFloor ? TravelDirection.UP : TravelDirection.DOWN;
-            }
+            currentDirection = pickUpFloor < dropOffFloor ? TravelDirection.UP : TravelDirection.DOWN;
 
             if (!previousDirection.equals(currentDirection))
             {
@@ -59,6 +57,16 @@ public final class DeliverOccupantsByTravelDirectionGuava implements OccupantDel
             }
             directionalTripBuilder.add(pickUpFloor).add(dropOffFloor);
         }
+
         return floorSequenceBuilder.addAll(directionalTripBuilder.build()).build();
+    }
+
+    private TravelDirection pickUpFirstRider(final int currentFloor, final Occupant occupant, ImmutableSortedSet.Builder<Integer> sequenceBuilder)
+    {
+        final TravelDirection currentTravelDirection = currentFloor < occupant.getOriginatingFloor() ? TravelDirection.UP : TravelDirection.DOWN;
+        sequenceBuilder = TravelDirection.UP.equals(currentTravelDirection) ? ImmutableSortedSet.naturalOrder() : ImmutableSortedSet.reverseOrder();
+        sequenceBuilder.add(currentFloor);
+
+        return currentTravelDirection;
     }
 }
