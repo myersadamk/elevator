@@ -12,9 +12,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Provides functionality for loading {@linkplain Scenario scenarios} from text files.
  */
-public class ScenarioLoader
+public final class ScenarioLoader
 {
     public ImmutableList<Scenario> loadScenariosFromFile(final String fileName)
     {
@@ -51,9 +51,11 @@ public class ScenarioLoader
             return new Scenario(travelRequestsBuilder.build());
         }
 
+        // To simplify algorithm implementations, a MoveCommand is created from the initial floor to the originating floor of the first parsed MoveCommand. This precludes the need to treat the first floor as a special case.
         travelRequestsBuilder.add(new MoveCommand(originalFloor, Integer.valueOf(matcher.group(1))));
-        travelRequestsBuilder.add(new MoveCommand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));
 
+        // Following the MoveCommand from the initial floor to first originating floor move, the rest of the MoveCommand's are parsed in a simple left-to-right fashion.
+        travelRequestsBuilder.add(new MoveCommand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));
         while (matcher.find())
         {
             travelRequestsBuilder.add(new MoveCommand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));

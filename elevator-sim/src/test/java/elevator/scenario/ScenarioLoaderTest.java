@@ -6,20 +6,35 @@ import elevator.sim.Scenario;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.net.URL;
+
+import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Verifies that {@linkplain ScenarioLoader} can properly load scenarios from text files.
  */
-public class ScenarioLoaderTest
+public final class ScenarioLoaderTest
 {
+    /**
+     * Verifies that the <code>emptyscenario.txt</code> resource is loaded and parsed successfully. Since the file is empty, no {@linkplain Scenario Scenarios} should be returned.
+     */
+    @Test
+    public void loadEmptyScenario()
+    {
+        assertThat(loadScenarioResource("emptyscenario.txt"), empty());
+    }
+
+    /**
+     * Verifies that the <code>simplescenario.txt</code> resource is loaded and parsed successfully:
+     * <pre>
+     *     10:8-1
+     * </pre>
+     */
     @Test
     public void loadSimpleScenario()
     {
-        final ImmutableList<Scenario> scenarios = loadScenarioResource("simplescenario.txt");
-        assertEquals(1, scenarios.size());
-        assertThat(scenarios, Matchers.contains(
+        assertThat(loadScenarioResource("simplescenario.txt"), Matchers.contains(
                 new Scenario(
                         ImmutableList.of(
                                 new MoveCommand(10, 8),
@@ -28,12 +43,17 @@ public class ScenarioLoaderTest
         ));
     }
 
+    /**
+     * Verifies that the <code>multiplescenarios.txt</code> resource is loaded and parsed successfully:
+     * <pre>
+     *     10:8-1
+     *     9:1-5,1-6,1-5
+     * </pre>
+     */
     @Test
     public void loadMultipleScenarios()
     {
-        final ImmutableList<Scenario> scenarios = loadScenarioResource("multiplescenarios.txt");
-        assertEquals(2, scenarios.size());
-        assertThat(scenarios, Matchers.contains(
+        assertThat(loadScenarioResource("multiplescenarios.txt"), Matchers.contains(
                 new Scenario(
                         ImmutableList.of(
                                 new MoveCommand(10, 8),
@@ -49,8 +69,16 @@ public class ScenarioLoaderTest
         ));
     }
 
+    /**
+     * Loads a resource located in the <code>src/resources/scenarios/</code> directory.
+     *
+     * @param resourceFileName The name of the resource.
+     * @return Non-null but possibly empty ImmutableList of {@linkplain Scenario scenarios} parsed from the given file.
+     */
     private ImmutableList<Scenario> loadScenarioResource(final String resourceFileName)
     {
-        return new ScenarioLoader().loadScenariosFromFile(getClass().getClassLoader().getResource("scenarios/" + resourceFileName).getPath());
+        final URL resource = getClass().getClassLoader().getResource("scenarios/" + resourceFileName);
+        assert resource != null : "Could not find resource: scenarios/" + resourceFileName;
+        return new ScenarioLoader().loadScenariosFromFile(resource.getPath());
     }
 }

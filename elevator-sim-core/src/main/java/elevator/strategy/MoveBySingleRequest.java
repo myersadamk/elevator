@@ -11,7 +11,7 @@ import java.util.List;
 public class MoveBySingleRequest implements MoveStrategy
 {
     @Override
-    public List<Integer> getMoveSequence(final ImmutableList<MoveCommand> moveCommands)
+    public ImmutableList<Integer> getMoveSequence(final List<MoveCommand> moveCommands)
     {
         final ImmutableList.Builder<Integer> moveSequenceBuilder = ImmutableList.builder();
         moveCommands.forEach(moveCommand -> moveSequenceBuilder.add(moveCommand.getOriginatingFloor()).add(moveCommand.getDestinationFloor()));

@@ -12,7 +12,7 @@ import java.util.List;
 public final class MoveByRequestsInSameDirection implements MoveStrategy
 {
     @Override
-    public List<Integer> getMoveSequence(final ImmutableList<MoveCommand> moveCommands)
+    public ImmutableList<Integer> getMoveSequence(final List<MoveCommand> moveCommands)
     {
         if (moveCommands.isEmpty())
         {

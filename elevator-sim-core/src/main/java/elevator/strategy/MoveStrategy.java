@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface MoveStrategy
 {
-    List<Integer> getMoveSequence(final ImmutableList<MoveCommand> moveCommands);
+    ImmutableList<Integer> getMoveSequence(final List<MoveCommand> moveCommands);
 }
