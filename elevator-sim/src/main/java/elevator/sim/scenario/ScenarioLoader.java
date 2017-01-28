@@ -1,8 +1,8 @@
-package elevator.scenario;
+package elevator.sim.scenario;
 
 import com.google.common.collect.ImmutableList;
-import elevator.sim.MoveCommand;
-import elevator.sim.Scenario;
+import elevator.sim.core.MoveCommand;
+import elevator.sim.core.Scenario;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -27,13 +27,13 @@ public final class ScenarioLoader
                 scenarioBuilder.add(parseLine(line));
             }
         }
-        catch (final FileNotFoundException e)
+        catch (final FileNotFoundException exception)
         {
-            e.printStackTrace();
+            throw new ScenarioLoadingException("Could not load scenario (file not found: " + fileName + ").", exception);
         }
-        catch (final IOException e)
+        catch (final IOException exception)
         {
-            e.printStackTrace();
+            throw new ScenarioLoadingException("Could not load scenario (exception thrown reading " + fileName + ").", exception);
         }
         return scenarioBuilder.build();
     }
@@ -44,7 +44,7 @@ public final class ScenarioLoader
         final int originalFloor = Integer.valueOf(line.substring(0, colonIndex));
 
         final ImmutableList.Builder<MoveCommand> travelRequestsBuilder = ImmutableList.builder();
-        final Matcher matcher = Pattern.compile("(\\d+)\\-(\\d)").matcher(line);
+        final Matcher matcher = Pattern.compile("(\\d+)\\-(\\d+)").matcher(line);
 
         if (!matcher.find())
         {

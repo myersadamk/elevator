@@ -1,17 +1,28 @@
-package elevator.sim;
+package elevator.sim.core;
 
 import com.google.common.base.Preconditions;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Represents a command to move from one floor (originating) to another (destination).
  */
-public class MoveCommand
+public final class MoveCommand
 {
     private final Integer originatingFloor;
     private final Integer destinationFloor;
 
+    /**
+     * Creates a new {@linkplain MoveCommand}
+     *
+     * @param originatingFloor The originating floor for the move (must be positive, cannot be null).
+     * @param destinationFloor The destination floor for the move (must be positive, cannot be null).
+     * @throws IllegalArgumentException if parameter conditions are not met.
+     * @apiNote The choice to use Integer rather than primitives comes from the fact that many operations in elevator-sim-core work with Integers; rather than doing a bunch of autoboxing, it is likely more efficient to just
+     * maintain the objects.
+     */
     public MoveCommand(final Integer originatingFloor, final Integer destinationFloor)
     {
+        Preconditions.checkArgument(originatingFloor != null, "originatingFloor: null");
+        Preconditions.checkArgument(destinationFloor != null, "destinationFloor: null");
         Preconditions.checkArgument(originatingFloor > 0, "originatingFloor: <= 0");
         Preconditions.checkArgument(destinationFloor > 0, "destinationFloor: <= 0");
         Preconditions.checkArgument(originatingFloor != destinationFloor, "originatingFloor and destinationFloor must be different values");
@@ -20,11 +31,17 @@ public class MoveCommand
         this.destinationFloor = destinationFloor;
     }
 
+    /**
+     * @return Positive, non-null originating floor for the move.
+     */
     public Integer getOriginatingFloor()
     {
         return originatingFloor;
     }
 
+    /**
+     * @return Positive, non-null destination floor for the move.
+     */
     public Integer getDestinationFloor()
     {
         return destinationFloor;

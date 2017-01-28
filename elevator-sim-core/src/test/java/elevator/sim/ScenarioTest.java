@@ -1,13 +1,15 @@
 package elevator.sim;
 
+import elevator.sim.core.MoveCommand;
+import elevator.sim.core.Scenario;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Verifies parameter validation in the {@linkplain MoveCommand} class.
  */
-public class ScenarioTest
+public final class ScenarioTest
 {
     @Rule
     public ExpectedException exception = ExpectedException.none();

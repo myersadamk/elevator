@@ -1,29 +1,32 @@
 package elevator.sim;
 
 import com.google.inject.AbstractModule;
+import elevator.strategy.MoveByRequestsInSameDirection;
+import elevator.strategy.MoveBySingleRequest;
+import elevator.strategy.MoveStrategy;
+
+import java.io.OutputStreamWriter;
 
 /**
  * Created by Adam on 1/27/2017.
  */
 public final class ElevatorSimModule extends AbstractModule
 {
-    enum Mode
-    {
-        A("a"), B("b");
-
-        private final String commandLineArgument;
-
-        Mode(final String commandLineArgument)
-        {
-            this.commandLineArgument = commandLineArgument;
-        }
-    }
-
-    private final String strategy;
+    private final Class moveStrategy;
 
     public ElevatorSimModule(final String strategy)
     {
-        this.strategy = strategy;
+        switch (strategy.toLowerCase())
+        {
+            case "a":
+                moveStrategy = MoveBySingleRequest.class;
+                break;
+            case "b":
+                moveStrategy = MoveByRequestsInSameDirection.class;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid mode specified: " + strategy + ". Valid options include [A, a, B, b].");
+        }
     }
 
     /**
@@ -32,6 +35,7 @@ public final class ElevatorSimModule extends AbstractModule
     @Override
     protected void configure()
     {
-//        bind(MoveBySingleRequest.class).to(Elevator.class);
+        bind(MoveStrategy.class).to(moveStrategy);
+        bind(OutputStreamWriter.class).toInstance(new OutputStreamWriter(System.out));
     }
 }

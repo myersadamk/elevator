@@ -1,4 +1,4 @@
-package elevator.sim;
+package elevator.sim.core;
 
 /**
  * Represents an exception that occurred during the execution of a {@linkplain Scenario} by the {@linkplain Elevator}.

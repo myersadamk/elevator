@@ -1,8 +1,8 @@
-package elevator.scenario;
+package elevator.sim.scenario;
 
 import com.google.common.collect.ImmutableList;
-import elevator.sim.MoveCommand;
-import elevator.sim.Scenario;
+import elevator.sim.core.MoveCommand;
+import elevator.sim.core.Scenario;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -39,6 +39,20 @@ public final class ScenarioLoaderTest
                         ImmutableList.of(
                                 new MoveCommand(10, 8),
                                 new MoveCommand(8, 1))
+                )
+        ));
+    }
+
+    //3:7-9,3-7,5-8,7-11,11-1
+    @Test
+    public void multiDigitScenario()
+    {
+        assertThat(loadScenarioResource("multidigitscenario.txt"), Matchers.contains(
+                new Scenario(
+                        ImmutableList.of(
+                                new MoveCommand(120, 33),
+                                new MoveCommand(33, 71),
+                                new MoveCommand(75, 94))
                 )
         ));
     }
