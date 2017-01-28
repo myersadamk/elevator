@@ -1,9 +1,9 @@
 package elevator.sim;
 
 import com.google.inject.AbstractModule;
-import elevator.strategy.MoveByRequestsInSameDirection;
-import elevator.strategy.MoveBySingleRequest;
-import elevator.strategy.MoveStrategy;
+import elevator.sim.core.strategy.MoveByRequestsInSameDirection;
+import elevator.sim.core.strategy.MoveBySingleRequest;
+import elevator.sim.core.strategy.MoveStrategy;
 
 import java.io.OutputStreamWriter;
 
@@ -14,9 +14,9 @@ public final class ElevatorSimModule extends AbstractModule
 {
     private final Class moveStrategy;
 
-    public ElevatorSimModule(final String strategy)
+    public ElevatorSimModule(final String mode)
     {
-        switch (strategy.toLowerCase())
+        switch (mode.toLowerCase())
         {
             case "a":
                 moveStrategy = MoveBySingleRequest.class;
@@ -25,7 +25,7 @@ public final class ElevatorSimModule extends AbstractModule
                 moveStrategy = MoveByRequestsInSameDirection.class;
                 break;
             default:
-                throw new IllegalArgumentException("Invalid mode specified: " + strategy + ". Valid options include [A, a, B, b].");
+                throw new IllegalArgumentException("Invalid mode specified: [" + mode + "]. Valid options include [A, a, B, b].");
         }
     }
 

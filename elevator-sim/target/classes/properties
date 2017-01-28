@@ -1,0 +1,4 @@
+test_scenario_directory=scenarios
+test_scenario_solutions_directory=solutions
+mode_a_solutions_subdirectory=mode_a
+mode_b_solutions_subdirectory=mode_a

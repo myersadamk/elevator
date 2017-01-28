@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import elevator.sim.core.Elevator;
 import elevator.sim.core.ElevatorScenarioExecutionException;
 import elevator.sim.core.Scenario;
-import elevator.strategy.MoveStrategy;
+import elevator.sim.core.strategy.MoveStrategy;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 /**
  * Verifies the {@linkplain StreamingOutputElevator} writes the appropriate output for a variety of {@linkplain Scenario Scenarios}. In particular, validates that the implementation properly counts the number of floors
  * travelled. Note that it is not necessary to test multiple {@linkplain MoveStrategy MoveStrategies} because the intention is not to test the strategy, just that the output from the elevator simulator is correct.
- * {@link elevator.strategy.MoveByRequestsInSameDirectionTest}
+ * {@link elevator.sim.core.strategy.MoveByRequestsInSameDirectionTest}
  */
 @RunWith(MockitoJUnitRunner.class)
 public final class StreamingOutputElevatorTest

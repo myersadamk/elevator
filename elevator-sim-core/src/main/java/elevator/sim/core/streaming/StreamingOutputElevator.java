@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import elevator.sim.core.Elevator;
 import elevator.sim.core.ElevatorScenarioExecutionException;
 import elevator.sim.core.Scenario;
-import elevator.strategy.MoveStrategy;
+import elevator.sim.core.strategy.MoveStrategy;
 
 import java.io.IOException;
 import java.io.OutputStream;
