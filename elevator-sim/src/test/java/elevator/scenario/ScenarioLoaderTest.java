@@ -1,8 +1,8 @@
 package elevator.scenario;
 
 import com.google.common.collect.ImmutableList;
-import elevator.sim.scenario.MoveCommand;
-import elevator.sim.scenario.Scenario;
+import elevator.sim.MoveCommand;
+import elevator.sim.Scenario;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class ScenarioLoaderTest
         final ImmutableList<Scenario> scenarios = loadScenarioResource("simplescenario.txt");
         assertEquals(1, scenarios.size());
         assertThat(scenarios, Matchers.contains(
-                new Scenario(10,
+                new Scenario(
                         ImmutableList.of(
                                 new MoveCommand(10, 8),
                                 new MoveCommand(8, 1))
@@ -34,12 +34,12 @@ public class ScenarioLoaderTest
         final ImmutableList<Scenario> scenarios = loadScenarioResource("multiplescenarios.txt");
         assertEquals(2, scenarios.size());
         assertThat(scenarios, Matchers.contains(
-                new Scenario(10,
+                new Scenario(
                         ImmutableList.of(
                                 new MoveCommand(10, 8),
                                 new MoveCommand(8, 1))
                 ),
-                new Scenario(9,
+                new Scenario(
                         ImmutableList.of(
                                 new MoveCommand(9, 1),
                                 new MoveCommand(1, 5),

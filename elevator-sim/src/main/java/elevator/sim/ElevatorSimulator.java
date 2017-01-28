@@ -2,7 +2,9 @@ package elevator.sim;
 
 import com.google.inject.AbstractModule;
 import elevator.scenario.ScenarioLoader;
-import elevator.sim.strategy.DeliverOccupantsByTravelDirectionGuava;
+import elevator.strategy.MoveByRequestsInSameDirection;
+
+import java.io.BufferedOutputStream;
 
 public final class ElevatorSimulator
 {
@@ -13,10 +15,10 @@ public final class ElevatorSimulator
             @Override
             protected void configure()
             {
-//                bind(OccupantDeliveryStrategy.class).to(DeliverOccupantsByTravelDirection.class);
+//                bind(MoveStrategy.class).to(DeliverOccupantsByTravelDirection.class);
             }
         };
 
-        new Elevator(new DeliverOccupantsByTravelDirectionGuava()).runScenarios(new ScenarioLoader().loadScenariosFromFile(""));
+        new Elevator(new MoveByRequestsInSameDirection(), new BufferedOutputStream(System.out)).runScenarios(new ScenarioLoader().loadScenariosFromFile(""));
     }
 }

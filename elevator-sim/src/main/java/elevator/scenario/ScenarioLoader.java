@@ -1,8 +1,8 @@
 package elevator.scenario;
 
 import com.google.common.collect.ImmutableList;
-import elevator.sim.scenario.MoveCommand;
-import elevator.sim.scenario.Scenario;
+import elevator.sim.MoveCommand;
+import elevator.sim.Scenario;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -48,7 +48,7 @@ public class ScenarioLoader
 
         if (!matcher.find())
         {
-            return new Scenario(originalFloor, travelRequestsBuilder.build());
+            return new Scenario(travelRequestsBuilder.build());
         }
 
         travelRequestsBuilder.add(new MoveCommand(originalFloor, Integer.valueOf(matcher.group(1))));
@@ -59,6 +59,6 @@ public class ScenarioLoader
             travelRequestsBuilder.add(new MoveCommand(Integer.valueOf(matcher.group(1)), Integer.valueOf(matcher.group(2))));
         }
 
-        return new Scenario(originalFloor, travelRequestsBuilder.build());
+        return new Scenario(travelRequestsBuilder.build());
     }
 }

@@ -1,7 +1,7 @@
-package elevator.sim.strategy;
+package elevator.strategy;
 
 import com.google.common.collect.ImmutableList;
-import elevator.sim.scenario.MoveCommand;
+import elevator.sim.MoveCommand;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -10,23 +10,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by Adam on 1/27/2017.
  */
-//@RunWith(Parameterized.class)
-public class DeliverMoveCommandsByTravelDirectionTest
+public class MoveByRequestsInSameDirectionTest
 {
-
-    //    @Parameterized.Parameters(name = "using {0}")
-//    public static Object[] data()
-//    {
-//        return new Object[]{new DeliverMoveCommandsByTravelDirectionGuava()};
-//    }
-////    public static Object[] parameters()
-////    {
-////        return new Object[]{new DeliverMoveCommandsByTravelDirection(), new DeliverMoveCommandsByTravelDirectionGuava()};
-////    }
-//
-//    @Parameterized.Parameter
-//    public OccupantDeliveryStrategy strategy;
-    public OccupantDeliveryStrategy strategy = new DeliverOccupantsByTravelDirectionGuava();
+    public MoveStrategy strategy = new MoveByRequestsInSameDirection();
 
     @Test
     public void exampleCaseOne()
@@ -119,42 +105,26 @@ public class DeliverMoveCommandsByTravelDirectionTest
                         new MoveCommand(6, 8))),
                 Matchers.contains(6, 1, 6, 8));
     }
-//    @Test
-//    public void multipleDescendingMoveCommands()
-//    {
-//        final MoveCommand MoveCommand1 = new MoveCommand(4, 1);
-//        final MoveCommand MoveCommand2 = new MoveCommand(3, 2);
-//        assertThat(strategy.getMoveSequence(,
-//                ImmutableList.of(
-//                        new MoveCommand(4, 1),
-//                        new MoveCommand(3, 2),
-//                        new MoveCommand(7, 5))),
-//                Matchers.contains(7, 5, 4, 3, 2, 1));
-//    }
-//    @Test
-//    public void multipleAscendingMoveCommands()
-//    {
-//        assertThat(strategy.getMoveSequence(,
-//                ImmutableList.of(
-//                        new MoveCommand(3, 6),
-//                        new MoveCommand(2, 7),
-//                        new MoveCommand(4, 5))),
-//                Matchers.contains(2, 3, 4, 5, 6, 7));
-//    }
-//
-//    @Test
-//    public void singleAscendingSingleDescending()
-//    {
-//        System.out.println(new DeliverMoveCommandsByTravelDirection().getMoveSequence(, ImmutableList.of(
-//                new MoveCommand(3, 6),
-//                new MoveCommand(4, 1))));
-//    }
-//
-//    @Test
-//    public void idleTrip()
-//    {
-//        System.out.println(new DeliverMoveCommandsByTravelDirection().getMoveSequence(, ImmutableList.of(
-//                new MoveCommand(3, 3))));
-//    }
-//
+
+    @Test
+    public void multipleDuplicateAscendingMoves()
+    {
+        assertThat(strategy.getMoveSequence(
+                ImmutableList.of(
+                        new MoveCommand(1, 6),
+                        new MoveCommand(1, 6),
+                        new MoveCommand(1, 6))),
+                Matchers.contains(1, 6));
+    }
+
+    @Test
+    public void multipleDuplicateDescendingMoves()
+    {
+        assertThat(strategy.getMoveSequence(
+                ImmutableList.of(
+                        new MoveCommand(13, 1),
+                        new MoveCommand(13, 1),
+                        new MoveCommand(13, 1))),
+                Matchers.contains(13, 1));
+    }
 }

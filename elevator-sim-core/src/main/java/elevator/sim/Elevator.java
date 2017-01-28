@@ -1,9 +1,11 @@
 package elevator.sim;
 
 import com.google.inject.Inject;
-import elevator.sim.scenario.Scenario;
-import elevator.sim.strategy.OccupantDeliveryStrategy;
+import elevator.strategy.MoveStrategy;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 /**
@@ -11,12 +13,14 @@ import java.util.List;
  */
 public final class Elevator
 {
-    private final OccupantDeliveryStrategy operationStrategy;
+    private final MoveStrategy operationStrategy;
+    private final OutputStream outputStream;
 
     @Inject
-    public Elevator(final OccupantDeliveryStrategy operationStrategy)
+    public Elevator(final MoveStrategy operationStrategy, final OutputStream outputStream)
     {
         this.operationStrategy = operationStrategy;
+        this.outputStream = outputStream;
     }
 
     public void runScenarios(final List<Scenario> scenarios)
@@ -35,6 +39,14 @@ public final class Elevator
             floorsTravelled += move;
             output.append(move).append(' ');
         }
-        System.out.println(output.toString() + "(" + floorsTravelled + ")");
+        try (final OutputStreamWriter writer = new OutputStreamWriter(outputStream))
+        {
+            writer.write(output.toString() + "(" + floorsTravelled + ")");
+            writer.flush();
+        }
+        catch (final IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

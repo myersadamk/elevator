@@ -1,16 +1,18 @@
-package elevator.sim.scenario;
+package elevator.sim;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Represents an elevator simulation scenario containing a series of move commands.
  */
 public final class Scenario
 {
     private final ImmutableList<MoveCommand> moveCommands;
 
-    public Scenario(final Integer originalFloor, final ImmutableList<MoveCommand> moveCommands)
+    public Scenario(final ImmutableList<MoveCommand> moveCommands)
     {
+        Preconditions.checkArgument(moveCommands != null, "moveCommands: null");
         this.moveCommands = moveCommands;
     }
 

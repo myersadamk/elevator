@@ -32,6 +32,6 @@ public final class ElevatorSimModule extends AbstractModule
     @Override
     protected void configure()
     {
-//        bind(DeliverSingleOccupant.class).to(Elevator.class);
+//        bind(MoveBySingleRequest.class).to(Elevator.class);
     }
 }

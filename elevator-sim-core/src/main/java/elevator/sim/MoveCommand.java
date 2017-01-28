@@ -1,4 +1,6 @@
-package elevator.sim.scenario;
+package elevator.sim;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Created by Adam on 1/27/2017.
@@ -10,6 +12,10 @@ public class MoveCommand
 
     public MoveCommand(final Integer originatingFloor, final Integer destinationFloor)
     {
+        Preconditions.checkArgument(originatingFloor > 0, "originatingFloor: <= 0");
+        Preconditions.checkArgument(destinationFloor > 0, "destinationFloor: <= 0");
+        Preconditions.checkArgument(originatingFloor != destinationFloor, "originatingFloor and destinationFloor must be different values");
+
         this.originatingFloor = originatingFloor;
         this.destinationFloor = destinationFloor;
     }
