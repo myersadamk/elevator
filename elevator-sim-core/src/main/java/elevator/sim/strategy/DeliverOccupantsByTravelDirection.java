@@ -1,5 +1,6 @@
 package elevator.sim.strategy;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import elevator.sim.Occupant;
 import elevator.sim.TravelDirection;
@@ -12,7 +13,7 @@ import java.util.List;
 public final class DeliverOccupantsByTravelDirection implements OccupantDeliveryStrategy
 {
     @Override
-    public List<Integer> getVisitationOrder(final List<Occupant> waitingOccupants)
+    public List<Integer> getFloorSequence(final int currentFloor, final List<Occupant> waitingOccupants)
     {
         final List<Integer> visitationOrder = Lists.newArrayListWithCapacity(waitingOccupants.size() * 2);
         TravelDirection currentDirection = TravelDirection.IDLE;
@@ -24,30 +25,34 @@ public final class DeliverOccupantsByTravelDirection implements OccupantDelivery
             final int originatingFloor = occupant.getOriginatingFloor();
             final int destinationFloor = occupant.getDestinationFloor();
 
-            previousDirection = currentDirection;
-            currentDirection = originatingFloor == destinationFloor ? TravelDirection.IDLE : originatingFloor < destinationFloor ? TravelDirection.UP : TravelDirection.DOWN;
+            Preconditions.checkState(originatingFloor != destinationFloor,
+                    "Cannot have an occupant with the same pick-up and drop-off floor (given [" + originatingFloor + "] at index [" + waitingOccupants.indexOf(occupant) + "].");
 
-            if (!previousDirection.equals(currentDirection))
+            previousDirection = currentDirection;
+            currentDirection = originatingFloor < destinationFloor ? TravelDirection.UP : TravelDirection.DOWN;
+
+            if (previousDirection != currentDirection)
             {
                 lastDirectionChangeIndex = visitationOrder.size();
+                visitationOrder.add(originatingFloor);
+                visitationOrder.add(destinationFloor);
+                continue;
             }
 
-            queueVisitation(currentDirection, lastDirectionChangeIndex, visitationOrder, originatingFloor, destinationFloor);
+            queueTripInSameDirection(currentDirection, lastDirectionChangeIndex, visitationOrder, originatingFloor, destinationFloor);
         }
         return visitationOrder;
     }
 
-    private void queueVisitation(final TravelDirection currentDirection, final int lastDirectionChangeIndex, final List<Integer> visitationOrder, final int originatingFloor, final int destinationFloor)
+    private void queueTripInSameDirection(final TravelDirection currentDirection, final int lastDirectionChangeIndex, final List<Integer> queuedFloors, final int originatingFloor, final int destinationFloor)
     {
-        if (visitationOrder.isEmpty() || TravelDirection.IDLE.equals(currentDirection))
-        {
-            visitationOrder.add(originatingFloor);
-            visitationOrder.add(destinationFloor);
-            return;
-        }
+        assert !TravelDirection.IDLE.equals(currentDirection) : "currentDirection: TravelDirection.IDLE";
+        assert lastDirectionChangeIndex >= 0 : "lastDirectionChangeIndex: < 0";
+        assert originatingFloor >= 1 : "originatingFloor: < 1";
+        assert destinationFloor >= 1 : "destinationFloor: < 1";
 
-        queuePickup(currentDirection, lastDirectionChangeIndex, visitationOrder, originatingFloor);
-        queueDropOff(currentDirection, lastDirectionChangeIndex, visitationOrder, destinationFloor);
+        queuePickup(currentDirection, lastDirectionChangeIndex, queuedFloors, originatingFloor);
+        queueDropOff(currentDirection, lastDirectionChangeIndex, queuedFloors, destinationFloor);
     }
 
     private void queuePickup(final TravelDirection currentDirection, final int lastDirectionChangeIndex, final List<Integer> queuedFloors, final int pickupFloor)

@@ -11,7 +11,7 @@ public class DeliverSingleOccupant implements OccupantDeliveryStrategy
 {
 
     @Override
-    public List<Integer> getVisitationOrder(final List<Occupant> waitingOccupants)
+    public List<Integer> getFloorSequence(final int currentFloor, final List<Occupant> waitingOccupants)
     {
         return null;
     }

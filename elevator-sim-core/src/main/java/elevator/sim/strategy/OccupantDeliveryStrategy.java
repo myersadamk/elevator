@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface OccupantDeliveryStrategy
 {
-    List<Integer> getVisitationOrder(final List<Occupant> waitingOccupants);
+    List<Integer> getFloorSequence(int currentFloor, final List<Occupant> waitingOccupants);
 }
