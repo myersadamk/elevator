@@ -14,17 +14,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 //@RunWith(Parameterized.class)
 public class DeliverOccupantsByTravelDirectionTest
 {
-    /**
-     * 10:8-1
-     * 9:1-5,1-6,1-5
-     * 2:4-1,4-2,6-8
-     * 3:7-9,3-7,5-8,7-11,11-1
-     * 7:11-6,10-5,6-8,7-4,12-7,8-9
-     * 6:1-8,6-8
-     *
-     * @return
-     */
-//    @Parameterized.Parameters(name = "using {0}")
+
+    //    @Parameterized.Parameters(name = "using {0}")
 //    public static Object[] data()
 //    {
 //        return new Object[]{new DeliverOccupantsByTravelDirectionGuava()};
@@ -72,13 +63,6 @@ public class DeliverOccupantsByTravelDirectionTest
     @Test
     public void exampleCaseFour()
     {
-        System.out.println(strategy.getFloorSequence(3,
-                ImmutableList.of(
-                        new Occupant(7, 9),
-                        new Occupant(3, 7),
-                        new Occupant(5, 8),
-                        new Occupant(7, 11),
-                        new Occupant(11, 1))));
         assertThat(strategy.getFloorSequence(3,
                 ImmutableList.of(
                         new Occupant(7, 9),
@@ -87,6 +71,44 @@ public class DeliverOccupantsByTravelDirectionTest
                         new Occupant(7, 11),
                         new Occupant(11, 1))),
                 Matchers.contains(3, 5, 7, 8, 9, 11, 1));
+    }
+
+    /**
+     * 10:8-1
+     * 9:1-5,1-6,1-5
+     * 2:4-1,4-2,6-8
+     * 3:7-9,3-7,5-8,7-11,11-1
+     * 7:11-6,10-5,6-8,7-4,12-7,8-9
+     * 6:1-8,6-8
+     *
+     * @return
+     */
+    @Test
+    public void exampleCaseFive()
+    {
+        assertThat(strategy.getFloorSequence(7,
+                ImmutableList.of(
+                        new Occupant(11, 6),
+                        new Occupant(10, 5),
+                        new Occupant(6, 8),
+                        new Occupant(7, 4),
+                        new Occupant(12, 7),
+                        new Occupant(8, 9))),
+                Matchers.contains(7, 11, 10, 6, 5, 6, 8, 12, 7, 4, 8, 9));
+    }
+
+    @Test
+    public void exampleCaseSix()
+    {
+        System.out.println(strategy.getFloorSequence(6,
+                ImmutableList.of(
+                        new Occupant(1, 8),
+                        new Occupant(6, 8))));
+        assertThat(strategy.getFloorSequence(6,
+                ImmutableList.of(
+                        new Occupant(1, 8),
+                        new Occupant(6, 8))),
+                Matchers.contains(6, 1, 6, 8));
     }
 //    @Test
 //    public void multipleDescendingOccupants()

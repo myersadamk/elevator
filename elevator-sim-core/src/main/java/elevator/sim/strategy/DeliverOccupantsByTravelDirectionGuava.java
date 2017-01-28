@@ -14,17 +14,18 @@ import java.util.List;
 public final class DeliverOccupantsByTravelDirectionGuava implements OccupantDeliveryStrategy
 {
     @Override
-    public List<Integer> getFloorSequence(final int currentFloor, final List<Occupant> waitingOccupants)
+    public List<Integer> getFloorSequence(final int originalFloor, final List<Occupant> waitingOccupants)
     {
         if (waitingOccupants.isEmpty())
         {
             return ImmutableList.of();
         }
 
-        TravelDirection currentDirection = TravelDirection.IDLE;
         TravelDirection previousDirection = null;
+        TravelDirection currentDirection = null;
+        int pivotFloor = originalFloor;
 
-        final ImmutableList.Builder floorSequenceBuilder = ImmutableList.builder();
+        final ImmutableList.Builder floorSequenceBuilder = ImmutableList.builder().add(originalFloor);
         ImmutableSortedSet.Builder directionalTripBuilder = null;
 
         for (final Occupant occupant : waitingOccupants)
@@ -38,35 +39,24 @@ public final class DeliverOccupantsByTravelDirectionGuava implements OccupantDel
             previousDirection = currentDirection;
             currentDirection = pickUpFloor < dropOffFloor ? TravelDirection.UP : TravelDirection.DOWN;
 
-            if (!previousDirection.equals(currentDirection))
+            if (!currentDirection.equals(previousDirection))
             {
                 if (directionalTripBuilder != null)
                 {
-                    floorSequenceBuilder.addAll(directionalTripBuilder.build());
+                    final ImmutableSortedSet<Integer> fullTrip = directionalTripBuilder.build();
+                    pivotFloor = fullTrip.last();
+                    floorSequenceBuilder.addAll(fullTrip);
                 }
-
-                switch (currentDirection)
-                {
-                    case UP:
-                        directionalTripBuilder = ImmutableSortedSet.naturalOrder();
-                        break;
-                    case DOWN:
-                        directionalTripBuilder = ImmutableSortedSet.reverseOrder();
-                        break;
-                }
+                directionalTripBuilder = TravelDirection.UP.equals(currentDirection) ? ImmutableSortedSet.naturalOrder() : ImmutableSortedSet.reverseOrder();
             }
-            directionalTripBuilder.add(pickUpFloor).add(dropOffFloor);
+
+            if (pivotFloor != pickUpFloor)
+            {
+                directionalTripBuilder.add(pickUpFloor);
+            }
+            directionalTripBuilder.add(dropOffFloor);
         }
 
         return floorSequenceBuilder.addAll(directionalTripBuilder.build()).build();
-    }
-
-    private TravelDirection pickUpFirstRider(final int currentFloor, final Occupant occupant, ImmutableSortedSet.Builder<Integer> sequenceBuilder)
-    {
-        final TravelDirection currentTravelDirection = currentFloor < occupant.getOriginatingFloor() ? TravelDirection.UP : TravelDirection.DOWN;
-        sequenceBuilder = TravelDirection.UP.equals(currentTravelDirection) ? ImmutableSortedSet.naturalOrder() : ImmutableSortedSet.reverseOrder();
-        sequenceBuilder.add(currentFloor);
-
-        return currentTravelDirection;
     }
 }
