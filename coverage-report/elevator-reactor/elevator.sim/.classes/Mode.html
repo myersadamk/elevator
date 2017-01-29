@@ -1,0 +1,123 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Mode</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">elevator.sim</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Mode (elevator.sim)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Mode</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package elevator.sim;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.common.base.Preconditions;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Represents valid running modes.
+<i>7</i>&nbsp; */
+<b class="fc"><i>8</i>&nbsp;public enum Mode</b>
+<i>9</i>&nbsp;{
+<i>10</i>&nbsp;    /**
+<i>11</i>&nbsp;     * See {@linkplain elevator.sim.core.strategy.MoveBySingleRequest}.
+<i>12</i>&nbsp;     */
+<b class="fc"><i>13</i>&nbsp;    A,</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /**
+<i>16</i>&nbsp;     * See {@linkplain elevator.sim.core.strategy.MoveByRequestsInSameDirection}.
+<i>17</i>&nbsp;     */
+<b class="fc"><i>18</i>&nbsp;    B;</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    /**
+<i>21</i>&nbsp;     * Parses a String into the appropriate mode.
+<i>22</i>&nbsp;     *
+<i>23</i>&nbsp;     * @param argument Argument to parse (cannot be null).
+<i>24</i>&nbsp;     * @return The {@linkplain Mode} corresponding to the argument (cannot be null).
+<i>25</i>&nbsp;     * @throws IllegalArgumentException if parameter conditions are not met.
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public static Mode parse(final String argument)
+<i>28</i>&nbsp;    {
+<b class="fc"><i>29</i>&nbsp;        Preconditions.checkArgument(argument != null, &quot;argument: null&quot;);</b>
+<b class="fc"><i>30</i>&nbsp;        switch (argument.toLowerCase())</b>
+<i>31</i>&nbsp;        {
+<i>32</i>&nbsp;            case &quot;a&quot;:
+<b class="fc"><i>33</i>&nbsp;                return Mode.A;</b>
+<i>34</i>&nbsp;            case &quot;b&quot;:
+<b class="fc"><i>35</i>&nbsp;                return Mode.B;</b>
+<i>36</i>&nbsp;            default:
+<b class="fc"><i>37</i>&nbsp;                throw new IllegalArgumentException(&quot;Invalid mode specified: [&quot; + argument + &quot;]. Valid options include [A, a, B, b].&quot;);</b>
+<i>38</i>&nbsp;        }
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2017-01-28 21:33</div>
+</div>
+</body>
+</html>

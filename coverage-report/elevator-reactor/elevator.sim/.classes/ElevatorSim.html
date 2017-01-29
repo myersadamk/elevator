@@ -1,0 +1,148 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ElevatorSim</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">elevator.sim</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ElevatorSim (elevator.sim)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ElevatorSim</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82.4%
+  </span>
+  <span class="absValue">
+    (14/ 17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package elevator.sim;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.common.base.Preconditions;
+<i>4</i>&nbsp;import com.google.common.collect.ImmutableList;
+<i>5</i>&nbsp;import com.google.inject.Guice;
+<i>6</i>&nbsp;import com.google.inject.Injector;
+<i>7</i>&nbsp;import elevator.sim.core.Elevator;
+<i>8</i>&nbsp;import elevator.sim.core.ElevatorScenarioExecutionException;
+<i>9</i>&nbsp;import elevator.sim.scenario.ScenarioLoader;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;import java.io.IOException;
+<i>12</i>&nbsp;import java.io.OutputStreamWriter;
+<i>13</i>&nbsp;import java.nio.file.Path;
+<i>14</i>&nbsp;import java.nio.file.Paths;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;/**
+<i>17</i>&nbsp; * Command-line application for running {@linkplain Elevator} simulations.
+<i>18</i>&nbsp; * &lt;p /&gt;{@value USAGE}
+<i>19</i>&nbsp; */
+<b class="nc"><i>20</i>&nbsp;public final class ElevatorSim</b>
+<i>21</i>&nbsp;{
+<i>22</i>&nbsp;    private static final String USAGE =
+<i>23</i>&nbsp;            &quot;Usage: &lt;mode&gt; &lt;filename&gt;\n&quot; + // Note that \n must be used instead of &amp;n or System.lineSeparator() since #USAGE is referred to in JavaDoc.
+<i>24</i>&nbsp;                    &quot;Modes:    [A,a] indicate MoveBySingleRequest should be used.\n&quot; +
+<i>25</i>&nbsp;                    &quot;          [B,b] indicate MoveByRequestsInSameDirection should be used.\n&quot; +
+<i>26</i>&nbsp;                    &quot;Filename: The full path to a file containing the scenarios to run.&quot;;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    public static String getUsage()
+<i>29</i>&nbsp;    {
+<b class="fc"><i>30</i>&nbsp;        return USAGE;</b>
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    /**
+<i>34</i>&nbsp;     * Runs a simulation based on the given &lt;code&gt;args&lt;/code&gt;.
+<i>35</i>&nbsp;     *
+<i>36</i>&nbsp;     * @param args {@value USAGE}
+<i>37</i>&nbsp;     * @throws ElevatorScenarioExecutionException if an exception occurs during the simulation.
+<i>38</i>&nbsp;     */
+<i>39</i>&nbsp;    public static void main(final String[] args)
+<i>40</i>&nbsp;    {
+<b class="fc"><i>41</i>&nbsp;        if (args.length == 0 || (args.length == 1 &amp;&amp; &quot;--help&quot;.equals(args[0])))</b>
+<i>42</i>&nbsp;        {
+<b class="fc"><i>43</i>&nbsp;            System.out.println(USAGE);</b>
+<b class="fc"><i>44</i>&nbsp;            return;</b>
+<i>45</i>&nbsp;        }
+<i>46</i>&nbsp;
+<b class="fc"><i>47</i>&nbsp;        final ImmutableList&lt;String&gt; arguments = ImmutableList.copyOf(args);</b>
+<b class="fc"><i>48</i>&nbsp;        Preconditions.checkArgument(args.length == 2, &quot;Invalid argument list: &quot; + arguments + System.lineSeparator());</b>
+<i>49</i>&nbsp;
+<b class="fc"><i>50</i>&nbsp;        final Path scenarioFileName = Paths.get(arguments.get(0));</b>
+<b class="fc"><i>51</i>&nbsp;        final Mode mode = Mode.parse(arguments.get(1));</b>
+<i>52</i>&nbsp;
+<b class="fc"><i>53</i>&nbsp;        final Injector injector = Guice.createInjector(new ElevatorSimModule(mode));</b>
+<i>54</i>&nbsp;
+<b class="fc"><i>55</i>&nbsp;        try (final OutputStreamWriter writer = new OutputStreamWriter(System.out))</b>
+<i>56</i>&nbsp;        {
+<b class="fc"><i>57</i>&nbsp;            injector.getInstance(Elevator.class).runScenarios(new ScenarioLoader().loadScenariosFromFile(scenarioFileName));</b>
+<b class="fc"><i>58</i>&nbsp;        }</b>
+<b class="nc"><i>59</i>&nbsp;        catch (final IOException exception)</b>
+<i>60</i>&nbsp;        {
+<b class="nc"><i>61</i>&nbsp;            throw new ElevatorScenarioExecutionException(&quot;Exception occurred while running simulation [&quot; + mode.name() + &quot;, &quot; + scenarioFileName + &quot;]&quot;, exception);</b>
+<b class="fc"><i>62</i>&nbsp;        }</b>
+<b class="fc"><i>63</i>&nbsp;    }</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2017-01-28 21:33</div>
+</div>
+</body>
+</html>

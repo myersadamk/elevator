@@ -1,0 +1,160 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MoveByRequestsInSameDirection</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">elevator.sim.core.strategy</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MoveByRequestsInSameDirection (elevator.sim.core.strategy)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MoveByRequestsInSameDirection</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.2%
+  </span>
+  <span class="absValue">
+    (25/ 26)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MoveByRequestsInSameDirection$$FastClassByGuice$$256eab45</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.2%
+  </span>
+  <span class="absValue">
+    (25/ 26)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package elevator.sim.core.strategy;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.common.base.Preconditions;
+<i>4</i>&nbsp;import com.google.common.collect.ImmutableList;
+<i>5</i>&nbsp;import com.google.common.collect.ImmutableSortedSet;
+<i>6</i>&nbsp;import elevator.sim.core.MoveCommand;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.List;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * Implementation of {@linkplain MoveStrategy} that attempts to optimize floor visitation order by allowing an unlimited number of occupants to ride in the same direction simultaneously. If a subsequent {@linkplain MoveCommand}
+<i>12</i>&nbsp; * is travelling in the same {@linkplain MoveDirection}, the command will be incorporated into the current move sequence.
+<i>13</i>&nbsp; */
+<b class="fc"><i>14</i>&nbsp;public final class MoveByRequestsInSameDirection implements MoveStrategy</b>
+<i>15</i>&nbsp;{
+<i>16</i>&nbsp;    /**
+<i>17</i>&nbsp;     * {@inheritDoc}
+<i>18</i>&nbsp;     *
+<i>19</i>&nbsp;     * @param moveCommands List of MoveCommands to execute (cannot be null, may be empty).
+<i>20</i>&nbsp;     * @throws IllegalArgumentException if parameter conditions are not met.
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;    @Override
+<i>23</i>&nbsp;    public ImmutableList&lt;Integer&gt; getMoveSequence(final List&lt;MoveCommand&gt; moveCommands)
+<i>24</i>&nbsp;    {
+<b class="fc"><i>25</i>&nbsp;        Preconditions.checkArgument(moveCommands != null, &quot;moveCommands: null&quot;);</b>
+<b class="fc"><i>26</i>&nbsp;        if (moveCommands.isEmpty())</b>
+<i>27</i>&nbsp;        {
+<b class="nc"><i>28</i>&nbsp;            return ImmutableList.of();</b>
+<i>29</i>&nbsp;        }
+<i>30</i>&nbsp;
+<b class="fc"><i>31</i>&nbsp;        MoveDirection previousDirection = null;</b>
+<b class="fc"><i>32</i>&nbsp;        MoveDirection currentDirection = null;</b>
+<b class="fc"><i>33</i>&nbsp;        int pivotFloor = 0;</b>
+<i>34</i>&nbsp;
+<b class="fc"><i>35</i>&nbsp;        final ImmutableList.Builder cumulativeMoveSequence = ImmutableList.builder();</b>
+<b class="fc"><i>36</i>&nbsp;        ImmutableSortedSet.Builder movesSequencedByCurrentDirection = null;</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;        for (final MoveCommand moveCommand : moveCommands)</b>
+<i>39</i>&nbsp;        {
+<b class="fc"><i>40</i>&nbsp;            final int originatingFloor = moveCommand.getOriginatingFloor();</b>
+<b class="fc"><i>41</i>&nbsp;            final int destinationFloor = moveCommand.getDestinationFloor();</b>
+<b class="fc"><i>42</i>&nbsp;            assert originatingFloor != destinationFloor : &quot;moveCommand.getOriginatingFloor() == moveCommand.getDestinationFloor()&quot;;</b>
+<i>43</i>&nbsp;
+<b class="fc"><i>44</i>&nbsp;            previousDirection = currentDirection;</b>
+<b class="fc"><i>45</i>&nbsp;            currentDirection = originatingFloor &lt; destinationFloor ? MoveDirection.UP : MoveDirection.DOWN;</b>
+<i>46</i>&nbsp;
+<b class="fc"><i>47</i>&nbsp;            if (!currentDirection.equals(previousDirection))</b>
+<i>48</i>&nbsp;            {
+<b class="fc"><i>49</i>&nbsp;                if (movesSequencedByCurrentDirection != null)</b>
+<i>50</i>&nbsp;                {
+<b class="fc"><i>51</i>&nbsp;                    final ImmutableSortedSet&lt;Integer&gt; pendingMoveSequence = movesSequencedByCurrentDirection.build();</b>
+<b class="fc"><i>52</i>&nbsp;                    pivotFloor = pendingMoveSequence.last();</b>
+<b class="fc"><i>53</i>&nbsp;                    cumulativeMoveSequence.addAll(pendingMoveSequence);</b>
+<i>54</i>&nbsp;                }
+<b class="fc"><i>55</i>&nbsp;                movesSequencedByCurrentDirection = MoveDirection.UP.equals(currentDirection) ? ImmutableSortedSet.naturalOrder() : ImmutableSortedSet.reverseOrder();</b>
+<i>56</i>&nbsp;            }
+<i>57</i>&nbsp;
+<b class="fc"><i>58</i>&nbsp;            if (pivotFloor != originatingFloor)</b>
+<i>59</i>&nbsp;            {
+<b class="fc"><i>60</i>&nbsp;                movesSequencedByCurrentDirection.add(originatingFloor);</b>
+<i>61</i>&nbsp;            }
+<b class="fc"><i>62</i>&nbsp;            movesSequencedByCurrentDirection.add(destinationFloor);</b>
+<b class="fc"><i>63</i>&nbsp;        }</b>
+<i>64</i>&nbsp;
+<b class="fc"><i>65</i>&nbsp;        return cumulativeMoveSequence.addAll(movesSequencedByCurrentDirection.build()).build();</b>
+<i>66</i>&nbsp;    }
+<i>67</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2017-01-28 21:33</div>
+</div>
+</body>
+</html>

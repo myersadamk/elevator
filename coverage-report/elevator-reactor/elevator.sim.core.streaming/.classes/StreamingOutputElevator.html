@@ -1,0 +1,198 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: StreamingOutputElevator</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">elevator.sim.core.streaming</a> ]
+</div>
+
+<h1>Coverage Summary for Class: StreamingOutputElevator (elevator.sim.core.streaming)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StreamingOutputElevator</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (32/ 32)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StreamingOutputElevator$$FastClassByGuice$$18ed33cd</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (32/ 32)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package elevator.sim.core.streaming;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.common.base.Preconditions;
+<i>4</i>&nbsp;import com.google.inject.Inject;
+<i>5</i>&nbsp;import elevator.sim.core.Elevator;
+<i>6</i>&nbsp;import elevator.sim.core.ElevatorScenarioExecutionException;
+<i>7</i>&nbsp;import elevator.sim.core.Scenario;
+<i>8</i>&nbsp;import elevator.sim.core.strategy.MoveStrategy;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.io.IOException;
+<i>11</i>&nbsp;import java.io.OutputStream;
+<i>12</i>&nbsp;import java.io.OutputStreamWriter;
+<i>13</i>&nbsp;import java.util.Collections;
+<i>14</i>&nbsp;import java.util.List;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;/**
+<i>17</i>&nbsp; * Implementation of {@linkplain Elevator} that prints the results of running {@linkplain Scenario Scenarios} to an OutputStreamWriter. Each move to a new floor is printed as a digit and proceeded by a space, e.g. &lt;code&gt;3 2 4
+<i>18</i>&nbsp; * 5&lt;/code&gt;. The output is terminated by a count of how many floors were travelled in total: for this example, there is 1 floor for the move from 3-2, 2 for floors for the move from 2-4, and 1 floor for the move from 4-5,
+<i>19</i>&nbsp; * resulting in &lt;code&gt;3 2 4 5 &lt;b&gt;(4)&lt;/b&gt;&lt;/code&gt;. &lt;p /&gt;
+<i>20</i>&nbsp; * If multiple scenarios are ran, each one is output on a new line.
+<i>21</i>&nbsp; */
+<i>22</i>&nbsp;public final class StreamingOutputElevator implements Elevator
+<i>23</i>&nbsp;{
+<i>24</i>&nbsp;    private final MoveStrategy operationStrategy;
+<i>25</i>&nbsp;    private final OutputStreamWriter outputStreamWriter;
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * Constructs a new {@linkplain StreamingOutputElevator}.
+<i>29</i>&nbsp;     *
+<i>30</i>&nbsp;     * @param moveStrategy The {@linkplain MoveStrategy} to use (cannot be null).
+<i>31</i>&nbsp;     * @param outputStreamWriter The {@linkplain OutputStreamWriter} to write the results of the scenario to (cannot be null).
+<i>32</i>&nbsp;     * @throws IllegalArgumentException if parameter conditions are not met.
+<i>33</i>&nbsp;     */
+<i>34</i>&nbsp;    @Inject
+<i>35</i>&nbsp;    public StreamingOutputElevator(final MoveStrategy moveStrategy, final OutputStreamWriter outputStreamWriter)
+<b class="fc"><i>36</i>&nbsp;    {</b>
+<b class="fc"><i>37</i>&nbsp;        Preconditions.checkArgument(moveStrategy != null, &quot;moveStrategy: null&quot;);</b>
+<b class="fc"><i>38</i>&nbsp;        Preconditions.checkArgument(outputStreamWriter != null, &quot;outputStreamWriter: null&quot;);</b>
+<i>39</i>&nbsp;
+<b class="fc"><i>40</i>&nbsp;        this.operationStrategy = moveStrategy;</b>
+<b class="fc"><i>41</i>&nbsp;        this.outputStreamWriter = outputStreamWriter;</b>
+<b class="fc"><i>42</i>&nbsp;    }</b>
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    /**
+<i>45</i>&nbsp;     * Runs a single {@linkplain Scenario}, printing the results of the simulation to the associated {@linkplain OutputStream}.
+<i>46</i>&nbsp;     *
+<i>47</i>&nbsp;     * @param scenario The Scenario to run (cannot be null).
+<i>48</i>&nbsp;     * @throws IllegalArgumentException if parameter conditions are not met.
+<i>49</i>&nbsp;     */
+<i>50</i>&nbsp;    @Override
+<i>51</i>&nbsp;    public void runScenario(final Scenario scenario)
+<i>52</i>&nbsp;    {
+<b class="fc"><i>53</i>&nbsp;        Preconditions.checkArgument(scenario != null, &quot;scenario: null&quot;);</b>
+<b class="fc"><i>54</i>&nbsp;        runScenarios(Collections.singletonList(scenario));</b>
+<b class="fc"><i>55</i>&nbsp;    }</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /**
+<i>58</i>&nbsp;     * Runs the given {@linkplain Scenario Scenarios}, printing the results of the simulation to the associated {@linkplain OutputStream}.
+<i>59</i>&nbsp;     *
+<i>60</i>&nbsp;     * @param scenarios The Scenarios to run (cannot be null or contain null values, may be empty).
+<i>61</i>&nbsp;     * @throws IllegalArgumentException if parameter conditions are not met.
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    @Override
+<i>64</i>&nbsp;    public void runScenarios(final List&lt;Scenario&gt; scenarios)
+<i>65</i>&nbsp;    {
+<b class="fc"><i>66</i>&nbsp;        Preconditions.checkArgument(scenarios != null, &quot;scenarios: null&quot;);</b>
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;        final int scenariosToRun = scenarios.size();</b>
+<b class="fc"><i>69</i>&nbsp;        for (int scenarioIndex = 0; scenarioIndex &lt; scenariosToRun; scenarioIndex++)</b>
+<i>70</i>&nbsp;        {
+<b class="fc"><i>71</i>&nbsp;            final Scenario scenario = scenarios.get(scenarioIndex);</b>
+<b class="fc"><i>72</i>&nbsp;            Preconditions.checkArgument(scenario != null, &quot;scenario: null&quot;);</b>
+<i>73</i>&nbsp;
+<b class="fc"><i>74</i>&nbsp;            final List&lt;Integer&gt; moveSequence = operationStrategy.getMoveSequence(scenario.getMoveCommands());</b>
+<b class="fc"><i>75</i>&nbsp;            if (moveSequence.isEmpty())</b>
+<i>76</i>&nbsp;            {
+<b class="fc"><i>77</i>&nbsp;                return;</b>
+<i>78</i>&nbsp;            }
+<i>79</i>&nbsp;
+<b class="fc"><i>80</i>&nbsp;            final StringBuffer output = new StringBuffer(moveSequence.size() * 4); // * 4 to account for spaces/potentially multi-digit floor values.</b>
+<b class="fc"><i>81</i>&nbsp;            Integer previousFloor = null;</b>
+<b class="fc"><i>82</i>&nbsp;            int floorsTravelled = 0;</b>
+<i>83</i>&nbsp;
+<b class="fc"><i>84</i>&nbsp;            for (final Integer move : moveSequence)</b>
+<i>85</i>&nbsp;            {
+<b class="fc"><i>86</i>&nbsp;                if (previousFloor != null)</b>
+<i>87</i>&nbsp;                {
+<b class="fc"><i>88</i>&nbsp;                    floorsTravelled += Math.abs(previousFloor - move);</b>
+<i>89</i>&nbsp;                }
+<i>90</i>&nbsp;
+<b class="fc"><i>91</i>&nbsp;                output.append(move).append(&#39; &#39;);</b>
+<b class="fc"><i>92</i>&nbsp;                previousFloor = move;</b>
+<b class="fc"><i>93</i>&nbsp;            }</b>
+<i>94</i>&nbsp;            try
+<i>95</i>&nbsp;            {
+<b class="fc"><i>96</i>&nbsp;                outputStreamWriter.write(output.toString() + &quot;(&quot; + floorsTravelled + &quot;)&quot; + ((scenarioIndex + 1 == scenariosToRun) ? &quot;&quot; : System.lineSeparator()));</b>
+<b class="fc"><i>97</i>&nbsp;                outputStreamWriter.flush();</b>
+<i>98</i>&nbsp;            }
+<b class="fc"><i>99</i>&nbsp;            catch (final IOException exception)</b>
+<i>100</i>&nbsp;            {
+<b class="fc"><i>101</i>&nbsp;                throw new ElevatorScenarioExecutionException(&quot;Exception occurred while executing scenario: &quot; + scenario, exception);</b>
+<b class="fc"><i>102</i>&nbsp;            }</b>
+<i>103</i>&nbsp;        }
+<b class="fc"><i>104</i>&nbsp;    }</b>
+<i>105</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2017-01-28 21:33</div>
+</div>
+</body>
+</html>
