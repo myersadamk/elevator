@@ -6,8 +6,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import elevator.sim.core.Elevator;
 import elevator.sim.core.ElevatorScenarioExecutionException;
-import elevator.sim.core.strategy.MoveByRequestsInSameDirection;
-import elevator.sim.core.streaming.StreamingOutputElevator;
 import elevator.sim.scenario.ScenarioLoader;
 
 import java.io.IOException;
@@ -57,7 +55,7 @@ public final class ElevatorSim
 
         try (final OutputStreamWriter writer = new OutputStreamWriter(System.out))
         {
-            new StreamingOutputElevator(new MoveByRequestsInSameDirection(), writer).runScenarios(new ScenarioLoader().loadScenariosFromFile(scenarioFileName));
+            injector.getInstance(Elevator.class).runScenarios(new ScenarioLoader().loadScenariosFromFile(scenarioFileName));
         }
         catch (final IOException exception)
         {

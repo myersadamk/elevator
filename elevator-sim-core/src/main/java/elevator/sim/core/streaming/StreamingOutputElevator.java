@@ -69,7 +69,6 @@ public final class StreamingOutputElevator implements Elevator
             }
 
             output.append(move).append(' ');
-
             previousFloor = move;
         }
         try

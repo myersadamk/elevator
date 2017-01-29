@@ -1,9 +1,11 @@
 package elevator.sim;
 
 import com.google.inject.AbstractModule;
+import elevator.sim.core.Elevator;
 import elevator.sim.core.strategy.MoveByRequestsInSameDirection;
 import elevator.sim.core.strategy.MoveBySingleRequest;
 import elevator.sim.core.strategy.MoveStrategy;
+import elevator.sim.core.streaming.StreamingOutputElevator;
 
 import java.io.OutputStreamWriter;
 
@@ -35,6 +37,7 @@ public final class ElevatorSimModule extends AbstractModule
     @Override
     protected void configure()
     {
+        bind(Elevator.class).to(StreamingOutputElevator.class);
         bind(MoveStrategy.class).to(moveStrategy);
         bind(OutputStreamWriter.class).toInstance(new OutputStreamWriter(System.out));
     }
