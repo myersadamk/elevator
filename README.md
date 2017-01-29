@@ -1,4 +1,4 @@
-# README #
+# elevator-sim #
 ### What is this repository for? ###
 
 * This repository contains elevator simulation algorithms and an application for running the simulations from the command line. It is a maven reactor project; the reactor is named elevator-reactor. It consists of two parts: 
