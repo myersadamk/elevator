@@ -19,7 +19,6 @@ import java.nio.file.Paths;
  */
 public final class ElevatorSim
 {
-
     private static final String USAGE =
             "Usage: <mode> <filename>\n" + // Note that \n must be used instead of &n or System.lineSeparator() since #USAGE is referred to in JavaDoc.
                     "Modes:    [A,a] indicate MoveBySingleRequest should be used.\n" +
@@ -49,7 +48,7 @@ public final class ElevatorSim
         Preconditions.checkArgument(args.length == 2, "Invalid argument list: " + arguments + System.lineSeparator());
 
         final Path scenarioFileName = Paths.get(arguments.get(0));
-        final String mode = arguments.get(1);
+        final Mode mode = Mode.parse(arguments.get(1));
 
         final Injector injector = Guice.createInjector(new ElevatorSimModule(mode));
 
@@ -59,7 +58,7 @@ public final class ElevatorSim
         }
         catch (final IOException exception)
         {
-            throw new ElevatorScenarioExecutionException("Exception occurred while running simulation [" + mode + ", " + scenarioFileName + "]", exception);
+            throw new ElevatorScenarioExecutionException("Exception occurred while running simulation [" + mode.name() + ", " + scenarioFileName + "]", exception);
         }
     }
 

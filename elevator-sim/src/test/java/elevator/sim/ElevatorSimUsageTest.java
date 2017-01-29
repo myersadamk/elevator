@@ -6,19 +6,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
 /**
- * Created by Adam on 1/28/2017.
+ * Contains tests for verifying the {@linkplain ElevatorSim#USAGE} can be requested from the command line.
  */
-public class ElevatorSimUsageTest
+public final class ElevatorSimUsageTest
 {
+    /**
+     * Verifies application usage is printed when no arguments are provided on the command line.
+     */
     @Test
     public void noArgumentsPrintsUsage()
     {
-        assertThat(RunElevatorSim.apply(new String[]{}), containsString(ElevatorSim.getUsage()));
+        assertThat(SimRunner.run(new String[]{}), containsString(ElevatorSim.getUsage()));
     }
 
+    /**
+     * Verifies application usage is printed when the only arguemtn on the command line is '--help'.
+     */
     @Test
     public void helpArgumentPrintsUsage()
     {
-        assertThat(RunElevatorSim.apply(new String[]{"--help"}), containsString(ElevatorSim.getUsage()));
+        assertThat(SimRunner.run(new String[]{"--help"}), containsString(ElevatorSim.getUsage()));
     }
 }

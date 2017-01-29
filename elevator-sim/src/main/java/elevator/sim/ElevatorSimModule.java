@@ -10,20 +10,20 @@ import elevator.sim.core.streaming.StreamingOutputElevator;
 import java.io.OutputStreamWriter;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Module binding application-appropriate implementations for the elevator-sim-core interfaces.
  */
 public final class ElevatorSimModule extends AbstractModule
 {
     private final Class moveStrategy;
 
-    public ElevatorSimModule(final String mode)
+    public ElevatorSimModule(final Mode mode)
     {
-        switch (mode.toLowerCase())
+        switch (mode)
         {
-            case "a":
+            case A:
                 moveStrategy = MoveBySingleRequest.class;
                 break;
-            case "b":
+            case B:
                 moveStrategy = MoveByRequestsInSameDirection.class;
                 break;
             default:

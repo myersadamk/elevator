@@ -1,22 +1,40 @@
 package elevator.sim;
 
+import com.google.common.base.Preconditions;
+
 /**
- * Created by Adam on 1/28/2017.
+ * Represents valid running modes.
  */
 public enum Mode
 {
-    A, B;
+    /**
+     * See {@linkplain elevator.sim.core.strategy.MoveBySingleRequest}.
+     */
+    A,
 
-    public boolean is(final String argument)
+    /**
+     * See {@linkplain elevator.sim.core.strategy.MoveByRequestsInSameDirection}.
+     */
+    B;
+
+    /**
+     * Parses a String into the appropriate mode.
+     *
+     * @param argument Argument to parse (cannot be null).
+     * @return The {@linkplain Mode} corresponding to the argument (cannot be null).
+     * @throws IllegalArgumentException if parameter conditions are not met.
+     */
+    public static Mode parse(final String argument)
     {
-        switch (argument.toUpperCase())
+        Preconditions.checkArgument(argument != null, "argument: null");
+        switch (argument.toLowerCase())
         {
-            case "A":
-                return Mode.A.equals(this);
-            case "B":
-                return Mode.B.equals(this);
+            case "a":
+                return Mode.A;
+            case "b":
+                return Mode.B;
             default:
-                return false;
+                throw new IllegalArgumentException("Invalid mode specified: [" + argument + "]. Valid options include [A, a, B, b].");
         }
     }
 }

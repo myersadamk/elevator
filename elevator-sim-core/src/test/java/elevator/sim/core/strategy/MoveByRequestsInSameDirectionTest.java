@@ -12,6 +12,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public final class MoveByRequestsInSameDirectionTest
 {
+    /**
+     * Verifies that MoveBySingleRequest throws an IllegalArgumentException when constructed with a null List of MoveCommands.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void nullMoveCommands()
     {
@@ -100,6 +103,9 @@ public final class MoveByRequestsInSameDirectionTest
                 Matchers.contains(6, 1, 6, 8));
     }
 
+    /**
+     * Verifies multiple duplicate ascending MoveCommands are not repeated in the output move sequence.
+     */
     @Test
     public void multipleDuplicateAscendingMoves()
     {
@@ -111,6 +117,9 @@ public final class MoveByRequestsInSameDirectionTest
                 Matchers.contains(1, 6));
     }
 
+    /**
+     * Verifies multiple duplicate descending MoveCommands are not repeated in the output move sequence.
+     */
     @Test
     public void multipleDuplicateDescendingMoves()
     {

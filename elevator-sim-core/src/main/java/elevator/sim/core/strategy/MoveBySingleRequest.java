@@ -7,9 +7,9 @@ import elevator.sim.core.MoveCommand;
 import java.util.List;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Simple {@linkplain MoveStrategy} implementation that does not attempt to optimize floor sequence, but simply processes {@linkplain MoveCommand MoveCommands} in a linear fashion.
  */
-public class MoveBySingleRequest implements MoveStrategy
+public final class MoveBySingleRequest implements MoveStrategy
 {
     /**
      * {@inheritDoc}

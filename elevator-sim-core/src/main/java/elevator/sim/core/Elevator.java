@@ -3,7 +3,7 @@ package elevator.sim.core;
 import java.util.List;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Represents an elevator capable of running {@linkplain Scenario Scenarios}.
  */
 public interface Elevator
 {

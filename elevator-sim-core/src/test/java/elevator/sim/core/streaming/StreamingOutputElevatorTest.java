@@ -7,11 +7,9 @@ import elevator.sim.core.Scenario;
 import elevator.sim.core.strategy.MoveStrategy;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -26,7 +24,6 @@ import static org.mockito.Mockito.*;
  * travelled. Note that it is not necessary to test multiple {@linkplain MoveStrategy MoveStrategies} because the intention is not to test the strategy, just that the output from the elevator simulator is correct.
  * {@link elevator.sim.core.strategy.MoveByRequestsInSameDirectionTest}
  */
-@RunWith(MockitoJUnitRunner.class)
 public final class StreamingOutputElevatorTest
 {
     @Rule
@@ -41,6 +38,9 @@ public final class StreamingOutputElevatorTest
     // Since the MoveStrategy is being mocked, the actual moves in the scenario are arbitrary.
     private static final Scenario DUMMY_SCENARIO = new Scenario(emptyList());
 
+    /**
+     * Verifies that runScenarios returns early when no Scenarios are provided.
+     */
     @Test
     public void emptyScenariosReturnsEarly()
     {
@@ -49,6 +49,9 @@ public final class StreamingOutputElevatorTest
         verifyZeroInteractions(mockOutputStreamWriter);
     }
 
+    /**
+     * Verifies that runScenario returns early when the given Scenario has no MoveCommands.
+     */
     @Test
     public void emptyMoveCommandReturnsEarly()
     {
@@ -58,6 +61,9 @@ public final class StreamingOutputElevatorTest
         verifyZeroInteractions(mockOutputStreamWriter);
     }
 
+    /**
+     * Verifies that an ElevatorScenarioExecutionException is thrown when the internal writer throws an IOException.
+     */
     @Test(expected = ElevatorScenarioExecutionException.class)
     public void ioExceptionThrownByWriter()
     {
@@ -74,6 +80,8 @@ public final class StreamingOutputElevatorTest
     }
 
     /**
+     * Verifies the first example scenario outputs the expected floor-differential.
+     *
      * @implNote This test verifies I'm doing the floor-differential calculation as specified. I'm not doing the full gamut of example scenarios since the integration tests will do that. Instead I've written targeted tests based
      * on specific work-flows.
      */
@@ -86,6 +94,9 @@ public final class StreamingOutputElevatorTest
         verifyWrittenLine("10 8 1 (9)");
     }
 
+    /**
+     * Verifies a single move command is written correctly.
+     */
     @Test
     public void singleMoveCommand()
     {
@@ -95,6 +106,9 @@ public final class StreamingOutputElevatorTest
         verifyWrittenLine("1 2 (1)");
     }
 
+    /**
+     * Verifies multiple ascending move commands are written correctly.
+     */
     @Test
     public void multipleAscendingMoveCommands()
     {
@@ -104,6 +118,9 @@ public final class StreamingOutputElevatorTest
         verifyWrittenLine("1 2 4 5 7 (6)");
     }
 
+    /**
+     * Verifies multiple descending move commands are written correctly.
+     */
     @Test
     public void multipleDescendingMoveCommands()
     {
@@ -113,6 +130,9 @@ public final class StreamingOutputElevatorTest
         verifyWrittenLine("9 5 4 3 1 (8)");
     }
 
+    /**
+     * Verifies a mix of ascending and descending move commands are written correctly.
+     */
     @Test
     public void ascendingAndDescendingMoveCommands()
     {
@@ -122,6 +142,9 @@ public final class StreamingOutputElevatorTest
         verifyWrittenLine("9 5 4 5 12 (13)");
     }
 
+    /**
+     * Verifies that multiple scenarios are written correctly (in particular, with the correct line separators).
+     */
     @Test
     public void multipleScenarios()
     {
@@ -132,8 +155,9 @@ public final class StreamingOutputElevatorTest
 
         createElevator().runScenarios(ImmutableList.of(DUMMY_SCENARIO, DUMMY_SCENARIO, DUMMY_SCENARIO));
 
-        verifyWrittenLine("9 5 4 3 1 (8)");
-        verifyWrittenLine("1 8 (7)");
+        final String separator = System.lineSeparator();
+        verifyWrittenLine("9 5 4 3 1 (8)" + separator);
+        verifyWrittenLine("1 8 (7)" + separator);
         verifyWrittenLine("4 2 4 5 (5)");
     }
 

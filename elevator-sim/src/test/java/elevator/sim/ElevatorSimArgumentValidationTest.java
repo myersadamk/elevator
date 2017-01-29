@@ -9,34 +9,43 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
 /**
- * Created by Adam on 1/28/2017.
+ * Contains validation tests for invalid command-line arguments.
  */
-public class ElevatorSimArgumentValidationTest
+public final class ElevatorSimArgumentValidationTest
 {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    /**
+     * Verifies that passing a single argument (that is not --help) causes the appropriate exception to be thrown.
+     */
     @Test
     public void oneArgumentInvalid()
     {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Invalid argument list: [foo]");
-        assertThat(RunElevatorSim.apply(new String[]{"foo"}), containsString(ElevatorSim.getUsage()));
+        assertThat(SimRunner.run(new String[]{"foo"}), containsString(ElevatorSim.getUsage()));
     }
 
+    /**
+     * Verifies that passing an unrecognized mode causes the appropriate exception to be thrown.
+     */
     @Test
     public void invalidMode()
     {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Invalid mode specified: [c]. Valid options include [A, a, B, b].");
-        RunElevatorSim.apply(new String[]{"foo", "c"});
+        SimRunner.run(new String[]{"foo", "c"});
     }
 
+    /**
+     * Verifies that passing a bogus file path causes the appropriate exception to be thrown.
+     */
     @Test
-    public void nonExistantFile()
+    public void nonExistentFile()
     {
         exception.expect(ScenarioLoadingException.class);
-        exception.expectMessage("Could not load scenario (file not found: 123).");
-        RunElevatorSim.apply(new String[]{"123", "b"});
+        exception.expectMessage("Could not load scenario (exception thrown reading 123).");
+        SimRunner.run(new String[]{"123", "b"});
     }
 }

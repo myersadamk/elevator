@@ -8,7 +8,8 @@ import elevator.sim.core.MoveCommand;
 import java.util.List;
 
 /**
- * Created by Adam on 1/27/2017.
+ * Implementation of {@linkplain MoveStrategy} that attempts to optimize floor visitation order by allowing an unlimited number of occupants to ride in the same direction simultaneously. If a subsequent {@linkplain MoveCommand}
+ * is travelling in the same {@linkplain MoveDirection}, the command will be incorporated into the current move sequence.
  */
 public final class MoveByRequestsInSameDirection implements MoveStrategy
 {

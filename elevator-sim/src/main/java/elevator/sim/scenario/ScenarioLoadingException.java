@@ -1,10 +1,13 @@
 package elevator.sim.scenario;
 
 /**
- * Created by Adam on 1/28/2017.
+ * Represents an exception that occurred while loading a scenario file.
  */
 public final class ScenarioLoadingException extends RuntimeException
 {
+    /**
+     * {@inheritDoc}
+     */
     public ScenarioLoadingException(final String message, final Throwable cause)
     {
         super(message, cause);

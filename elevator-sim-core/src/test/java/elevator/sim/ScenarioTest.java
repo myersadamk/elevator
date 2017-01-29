@@ -14,6 +14,9 @@ public final class ScenarioTest
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    /**
+     * Verifies the appropriate exception is thrown when 'null' is provided to the Scenario constructor.
+     */
     @Test
     public void nullMoveCommands()
     {

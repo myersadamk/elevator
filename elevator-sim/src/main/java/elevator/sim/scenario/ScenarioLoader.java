@@ -1,5 +1,6 @@
 package elevator.sim.scenario;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import elevator.sim.core.MoveCommand;
 import elevator.sim.core.Scenario;
@@ -17,8 +18,18 @@ import java.util.regex.Pattern;
  */
 public final class ScenarioLoader
 {
+    /**
+     * Loads a scenario from a file.
+     *
+     * @param filePath The Path to the scenario file (cannot be null).
+     * @return Non-null, possibly empty ImmutableList of {@linkplain Scenario Scenarios} from the file.
+     * @throws IllegalArgumentException if parameter conditions are not met.
+     * @throws ScenarioLoadingException if an exception occurs while loading the scenario.
+     */
     public ImmutableList<Scenario> loadScenariosFromFile(final Path filePath)
     {
+        Preconditions.checkArgument(filePath != null, "filePath: null");
+
         final ImmutableList.Builder<Scenario> scenarioBuilder = ImmutableList.builder();
         try (final BufferedReader reader = Files.newBufferedReader(filePath))
         {
@@ -39,6 +50,13 @@ public final class ScenarioLoader
         return scenarioBuilder.build();
     }
 
+    /**
+     * Parses an individual line into a {@linkplain Scenario}.
+     *
+     * @param line The line to parse.
+     * @return Non-null Scenario from the parsed line.
+     * @implNote To simplify the Scenario, a {@linkplain MoveCommand} from the initial floor to the originating floor of the first command.
+     */
     private Scenario parseLine(final String line)
     {
         final int colonIndex = line.indexOf(':');

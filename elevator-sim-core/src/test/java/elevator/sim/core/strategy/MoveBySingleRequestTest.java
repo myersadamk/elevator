@@ -12,18 +12,27 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public final class MoveBySingleRequestTest
 {
+    /**
+     * Verifies that MoveBySingleRequest throws an IllegalArgumentException when constructed with a null List of MoveCommands.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void nullMoveCommands()
     {
         createMoveStrategy().getMoveSequence(null);
     }
 
+    /**
+     * Verifies that a single MoveCommand results in the expected move sequence.
+     */
     @Test
     public void singleRequest()
     {
         assertThat(createMoveStrategy().getMoveSequence(ImmutableList.of(new MoveCommand(8, 1))), Matchers.contains(8, 1));
     }
 
+    /**
+     * Verifies that a single MoveCommand results in the expected move sequence.
+     */
     @Test
     public void pickUpSameAsDropOff()
     {
@@ -34,6 +43,9 @@ public final class MoveBySingleRequestTest
                 Matchers.contains(10, 8, 1));
     }
 
+    /**
+     * Verifies that multiple ascending MoveCommands result in the expected move sequence.
+     */
     @Test
     public void multipleAscendingMoves()
     {
@@ -45,6 +57,9 @@ public final class MoveBySingleRequestTest
                 Matchers.contains(2, 4, 3, 7, 5, 11));
     }
 
+    /**
+     * Verifies that multiple descending MoveCommands result in the expected move sequence.
+     */
     @Test
     public void multipleDescendingMoves()
     {
@@ -56,6 +71,9 @@ public final class MoveBySingleRequestTest
                 Matchers.contains(13, 4, 7, 3, 5, 4));
     }
 
+    /**
+     * Verifies that an ascending MoveCommand followed by a descending MoveCommand results in the expected move sequence.
+     */
     @Test
     public void ascendingMoveFollowedByDescendingMove()
     {
@@ -66,6 +84,9 @@ public final class MoveBySingleRequestTest
                 Matchers.contains(3, 40, 39, 2));
     }
 
+    /**
+     * Verifies that a descending MoveCommand followed by an ascending MoveCommand results in the expected move sequence.
+     */
     @Test
     public void descendingMoveFollowedByAscendingMove()
     {
