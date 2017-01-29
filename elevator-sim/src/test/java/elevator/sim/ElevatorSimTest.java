@@ -20,54 +20,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public final class ElevatorSimTest
 {
     @DataPoints
-    public static String[] scenarios = new String[]{"examplescenarios.txt"};
+    public static final String[] scenarios = new String[]{"examplescenarios.txt", "emptyscenario.txt", "simplescenario.txt", "multidigitscenario.txt", "multiplescenarios.txt"};
 
     @DataPoints
-//    public static Mode[] modes = new Mode[]{Mode.B};
-    public static Mode[] modes = Mode.class.getEnumConstants();
+    public static final Mode[] modes = Mode.class.getEnumConstants();
 
     @Theory
     public void exampleScenariosTest(final String scenario, final Mode mode)
     {
-        new TestPlan()
-        {
-            @Override
-            protected String getScenarioName()
-            {
-                return scenario;
-            }
-
-            @Override
-            protected Mode getMode()
-            {
-                return mode;
-            }
-        }.runSimulationAndValidateSolution();
+        System.out.print("Testing theory on " + scenario + " in mode " + mode.name() + "...");
+        final String solution = readSolution(TestScenarios.getSolutionPath(scenario, mode));
+        assertThat(RunElevatorSim.apply(TestScenarios.getScenarioPath(scenario), mode), equalTo(solution));
+        System.out.print(" Success!" + System.lineSeparator());
     }
 
-    private abstract class TestPlan
+    private static String readSolution(final Path solutionPath)
     {
-        protected abstract String getScenarioName();
-
-        protected abstract Mode getMode();
-
-        protected final void runSimulationAndValidateSolution()
+        try
         {
-            final String solution = readSolution(TestScenarios.getSolutionPath(getScenarioName(), getMode()));
-            assertThat(RunElevatorSim.apply(TestScenarios.getScenarioPath(getScenarioName()), getMode()), equalTo(solution));
+            return new String(Files.readAllBytes(solutionPath), System.getProperty("file.encoding"));
         }
-
-        private String readSolution(final Path solutionPath)
+        catch (final IOException e)
         {
-            try
-            {
-                return new String(Files.readAllBytes(solutionPath), System.getProperty("file.encoding"));
-            }
-            catch (final IOException e)
-            {
-                e.printStackTrace();
-            }
-            return null;
+            e.printStackTrace();
         }
+        return null;
     }
 }

@@ -10,6 +10,7 @@ import elevator.sim.core.strategy.MoveStrategy;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,36 +51,7 @@ public final class StreamingOutputElevator implements Elevator
     public void runScenario(final Scenario scenario)
     {
         Preconditions.checkArgument(scenario != null, "scenario: null");
-
-        final List<Integer> moveSequence = operationStrategy.getMoveSequence(scenario.getMoveCommands());
-        if (moveSequence.isEmpty())
-        {
-            return;
-        }
-
-        final StringBuffer output = new StringBuffer(moveSequence.size() * 4); // * 4 to account for spaces/potentially multi-digit floor values.
-        Integer previousFloor = null;
-        int floorsTravelled = 0;
-
-        for (final Integer move : moveSequence)
-        {
-            if (previousFloor != null)
-            {
-                floorsTravelled += Math.abs(previousFloor - move);
-            }
-
-            output.append(move).append(' ');
-            previousFloor = move;
-        }
-        try
-        {
-            outputStreamWriter.write(output.toString() + "(" + floorsTravelled + ")" + System.lineSeparator());
-            outputStreamWriter.flush();
-        }
-        catch (final IOException exception)
-        {
-            throw new ElevatorScenarioExecutionException("Exception occurred while executing scenario: " + scenario, exception);
-        }
+        runScenarios(Collections.singletonList(scenario));
     }
 
     /**
@@ -92,14 +64,42 @@ public final class StreamingOutputElevator implements Elevator
     public void runScenarios(final List<Scenario> scenarios)
     {
         Preconditions.checkArgument(scenarios != null, "scenarios: null");
-        if (scenarios.isEmpty())
+
+        final int scenariosToRun = scenarios.size();
+        for (int scenarioIndex = 0; scenarioIndex < scenariosToRun; scenarioIndex++)
         {
-            return;
-        }
-        scenarios.forEach(scenario ->
-        {
+            final Scenario scenario = scenarios.get(scenarioIndex);
             Preconditions.checkArgument(scenario != null, "scenario: null");
-            runScenario(scenario);
-        });
+
+            final List<Integer> moveSequence = operationStrategy.getMoveSequence(scenario.getMoveCommands());
+            if (moveSequence.isEmpty())
+            {
+                return;
+            }
+
+            final StringBuffer output = new StringBuffer(moveSequence.size() * 4); // * 4 to account for spaces/potentially multi-digit floor values.
+            Integer previousFloor = null;
+            int floorsTravelled = 0;
+
+            for (final Integer move : moveSequence)
+            {
+                if (previousFloor != null)
+                {
+                    floorsTravelled += Math.abs(previousFloor - move);
+                }
+
+                output.append(move).append(' ');
+                previousFloor = move;
+            }
+            try
+            {
+                outputStreamWriter.write(output.toString() + "(" + floorsTravelled + ")" + ((scenarioIndex + 1 == scenariosToRun) ? "" : System.lineSeparator()));
+                outputStreamWriter.flush();
+            }
+            catch (final IOException exception)
+            {
+                throw new ElevatorScenarioExecutionException("Exception occurred while executing scenario: " + scenario, exception);
+            }
+        }
     }
 }

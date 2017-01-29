@@ -72,12 +72,6 @@ public final class TestScenarios
 
         try
         {
-            System.out.println(path.toString());
-            final URL resource1 = TestScenarios.class.getClassLoader().getResource(path.toString());
-            if (resource1 == null)
-            {
-                System.out.println("fuck");
-            }
             final URL resource = ClassLoader.getSystemResource(path.toString());
             if (resource == null)
             {

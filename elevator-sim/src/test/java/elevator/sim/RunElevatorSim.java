@@ -23,7 +23,6 @@ public final class RunElevatorSim
     public static String apply(final String[] args)
     {
         final PrintStream standardOut = System.out;
-        System.out.println("aggh");
 
         try (final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
              final PrintStream redirectedStandardOut = new PrintStream(byteStream))
