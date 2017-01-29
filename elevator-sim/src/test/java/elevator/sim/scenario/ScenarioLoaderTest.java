@@ -7,6 +7,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.net.URL;
+import java.nio.file.Paths;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
@@ -93,6 +94,6 @@ public final class ScenarioLoaderTest
     {
         final URL resource = getClass().getClassLoader().getResource("scenarios/" + resourceFileName);
         assert resource != null : "Could not find resource: scenarios/" + resourceFileName;
-        return new ScenarioLoader().loadScenariosFromFile(resource.getPath());
+        return new ScenarioLoader().loadScenariosFromFile(Paths.get(resource.getPath()));
     }
 }

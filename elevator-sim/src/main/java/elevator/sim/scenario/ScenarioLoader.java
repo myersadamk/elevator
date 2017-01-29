@@ -6,8 +6,9 @@ import elevator.sim.core.Scenario;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,10 +17,10 @@ import java.util.regex.Pattern;
  */
 public final class ScenarioLoader
 {
-    public ImmutableList<Scenario> loadScenariosFromFile(final String fileName)
+    public ImmutableList<Scenario> loadScenariosFromFile(final Path filePath)
     {
         final ImmutableList.Builder<Scenario> scenarioBuilder = ImmutableList.builder();
-        try (final BufferedReader reader = new BufferedReader(new FileReader(fileName)))
+        try (final BufferedReader reader = Files.newBufferedReader(filePath))
         {
             String line = null;
             while ((line = reader.readLine()) != null)
@@ -29,11 +30,11 @@ public final class ScenarioLoader
         }
         catch (final FileNotFoundException exception)
         {
-            throw new ScenarioLoadingException("Could not load scenario (file not found: " + fileName + ").", exception);
+            throw new ScenarioLoadingException("Could not load scenario (file not found: " + filePath + ").", exception);
         }
         catch (final IOException exception)
         {
-            throw new ScenarioLoadingException("Could not load scenario (exception thrown reading " + fileName + ").", exception);
+            throw new ScenarioLoadingException("Could not load scenario (exception thrown reading " + filePath + ").", exception);
         }
         return scenarioBuilder.build();
     }

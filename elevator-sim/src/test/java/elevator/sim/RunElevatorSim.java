@@ -3,15 +3,16 @@ package elevator.sim;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
 
 /**
  * Function for running {@link ElevatorSim#main(String[])}.
  */
 public final class RunElevatorSim
 {
-    public static String apply(final String scenario, final String mode)
+    public static String apply(final Path scenarioPath, final Mode mode)
     {
-        return apply(new String[]{scenario, mode});
+        return apply(new String[]{scenarioPath.toString(), mode.name()});
     }
 
     /**

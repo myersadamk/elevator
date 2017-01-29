@@ -12,6 +12,8 @@ import elevator.sim.scenario.ScenarioLoader;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Command-line application for running {@linkplain Elevator} simulations.
@@ -48,7 +50,7 @@ public final class ElevatorSim
         final ImmutableList<String> arguments = ImmutableList.copyOf(args);
         Preconditions.checkArgument(args.length == 2, "Invalid argument list: " + arguments + System.lineSeparator());
 
-        final String scenarioFileName = arguments.get(0);
+        final Path scenarioFileName = Paths.get(arguments.get(0));
         final String mode = arguments.get(1);
 
         final Injector injector = Guice.createInjector(new ElevatorSimModule(mode));
